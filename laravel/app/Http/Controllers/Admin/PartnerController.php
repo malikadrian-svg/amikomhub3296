@@ -4,13 +4,42 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Partner;
+use Illuminate\Http\Request;
 
 class PartnerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $partners = Partner::all();
-        return view('admin.partners.index', compact('partners'));
+        $search = $request->input('search');
+        $filter = $request->input('filter');
+
+        $query = Partner::query();
+
+        if ($search) {
+            $query->where('name', 'LIKE', '%' . $search . '%');
+        }
+
+        switch ($filter) {
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        $partners = $query->paginate(4);
+
+        return view('admin.partners.index', compact('partners', 'search', 'filter'));
     }
 
     public function create()

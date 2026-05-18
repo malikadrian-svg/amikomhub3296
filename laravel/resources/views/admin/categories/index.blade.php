@@ -1,156 +1,114 @@
 @extends('layouts.admin')
 
 @section('content')
-    <header class="flex justify-between items-center mb-10">
-        <div>
-            <h1 class="text-3xl font-black">Manajemen Kategori</h1>
-            <p class="text-slate-500 font-medium">Kelola kategori event yang tersedia di platform.</p>
-        </div>
-        <button
-            class="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition">
-            + Tambah Kategori
-        </button>
-    </header>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Manajemen Kategori</h2>
+        <a href="{{ route('admin.categories.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded font-semibold hover:bg-indigo-700">Tambah Kategori</a>
+    </div>
 
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-        <div class="px-8 py-6 bg-slate-50/50 border-b flex gap-4">
-            <input type="text" placeholder="Cari nama kategori..."
-                class="flex-1 px-5 py-3 rounded-xl border-slate-200 border bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
-        </div>
+    @if(session('success'))
+    <div class="bg-green-100 text-green-700 p-4 rounded mb-5 border border-green-200">
+        {{ session('success') }}
+    </div>
+    @endif
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
-                    <tr>
-                        <th class="px-8 py-4 w-16">No</th>
-                        <th class="px-8 py-4">Nama Kategori</th>
-                        <th class="px-8 py-4">Jumlah Event</th>
-                        <th class="px-8 py-4">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y border-t">
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="px-8 py-6 font-bold text-slate-400">1</td>
-                        <td class="px-8 py-6">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                                        </path>
-                                    </svg>
-                                </div>
-                                <p class="font-black text-slate-800">Seminar</p>
-                            </div>
-                        </td>
-                        <td class="px-8 py-6">
-                            <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-sm font-bold">5 Event</span>
-                        </td>
-                        <td class="px-8 py-6">
-                            <div class="flex gap-2">
-                                <button
-                                    class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition"
-                                    title="Edit">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                        </path>
-                                    </svg>
-                                </button>
-                                <button
-                                    class="p-2.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition"
-                                    title="Hapus">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="px-8 py-6 font-bold text-slate-400">2</td>
-                        <td class="px-8 py-6">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex items-center justify-center">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
-                                        </path>
-                                    </svg>
-                                </div>
-                                <p class="font-black text-slate-800">Konser</p>
-                            </div>
-                        </td>
-                        <td class="px-8 py-6">
-                            <span class="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-sm font-bold">3 Event</span>
-                        </td>
-                        <td class="px-8 py-6">
-                            <div class="flex gap-2">
-                                <button
-                                    class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition"
-                                    title="Edit">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                        </path>
-                                    </svg>
-                                </button>
-                                <button
-                                    class="p-2.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition"
-                                    title="Hapus">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="px-8 py-6 font-bold text-slate-400">3</td>
-                        <td class="px-8 py-6">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                                        </path>
-                                    </svg>
-                                </div>
-                                <p class="font-black text-slate-800">Workshop</p>
-                            </div>
-                        </td>
-                        <td class="px-8 py-6">
-                            <span class="px-3 py-1 bg-orange-50 text-orange-600 rounded-lg text-sm font-bold">7 Event</span>
-                        </td>
-                        <td class="px-8 py-6">
-                            <div class="flex gap-2">
-                                <button
-                                    class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition"
-                                    title="Edit">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                        </path>
-                                    </svg>
-                                </button>
-                                <button
-                                    class="p-2.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition"
-                                    title="Hapus">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    {{-- Search & Filter --}}
+    <form action="{{ route('admin.categories.index') }}" method="GET" class="mb-5">
+        <div class="flex gap-3 items-center">
+            <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama kategori..."
+                class="flex-1 border border-gray-300 p-2.5 rounded focus:ring focus:ring-indigo-200 bg-white" />
+            <select name="filter" class="border border-gray-300 p-2.5 rounded bg-white text-gray-700 focus:ring focus:ring-indigo-200">
+                <option value="">-- Urutkan --</option>
+                <option value="name_asc" {{ ($filter ?? '') == 'name_asc' ? 'selected' : '' }}>Nama (A → Z)</option>
+                <option value="name_desc" {{ ($filter ?? '') == 'name_desc' ? 'selected' : '' }}>Nama (Z → A)</option>
+                <option value="oldest" {{ ($filter ?? '') == 'oldest' ? 'selected' : '' }}>Terlama (Berdasarkan tanggal dibuat)</option>
+                <option value="newest" {{ ($filter ?? '') == 'newest' ? 'selected' : '' }}>Terbaru (Berdasarkan tanggal dibuat)</option>
+            </select>
+            <button type="submit" class="bg-indigo-600 text-white px-5 py-2.5 rounded font-semibold hover:bg-indigo-700 transition">Cari Data</button>
+            @if(($search ?? '') || ($filter ?? ''))
+            <a href="{{ route('admin.categories.index') }}" class="bg-gray-100 text-gray-700 border border-gray-300 px-5 py-2.5 rounded font-semibold hover:bg-gray-200 transition">Reset</a>
+            @endif
+        </div>
+    </form>
+
+    <div class="overflow-x-auto">
+        <table class="w-full bg-white rounded-lg shadow-sm border border-gray-200 text-left">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-200">
+                    <th class="p-4 font-semibold text-gray-600">No</th>
+                    <th class="p-4 font-semibold text-gray-600">Nama Kategori</th>
+                    <th class="p-4 font-semibold text-gray-600">Jumlah Event</th>
+                    <th class="p-4 font-semibold text-gray-600">Created At</th>
+                    <th class="p-4 font-semibold text-gray-600">Updated At</th>
+                    <th class="p-4 font-semibold text-gray-600">Aksi Pilihan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($categories as $index => $category)
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="p-4 text-gray-800">{{ $categories->firstItem() + $index }}</td>
+                    <td class="p-4 text-gray-800 font-semibold">{{ $category->name }}</td>
+                    <td class="p-4 text-indigo-600">{{ $category->events_count }} Event</td>
+                    <td class="p-4 text-gray-600">{{ $category->created_at->format('d M Y, H:i') }}</td>
+                    <td class="p-4 text-gray-600">{{ $category->updated_at->format('d M Y, H:i') }}</td>
+                    <td class="p-4 flex gap-2">
+                        <a href="{{ route('admin.categories.edit', $category->id) }}" class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1.5 rounded text-sm font-semibold hover:bg-blue-600 hover:text-white transition">Edit Data</a>
+
+                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Anda yakin ingin menghapus kategori ini secara permanen?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-100 text-red-600 border border-red-200 px-3 py-1.5 rounded text-sm font-semibold hover:bg-red-600 hover:text-white transition">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" class="p-8 text-center text-gray-400 font-medium">
+                        Belum ada kategori. Klik tombol "Tambah Kategori" untuk menambahkan.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    {{-- Custom Pagination --}}
+    @if($categories->hasPages())
+    <div class="flex items-center justify-between mt-6">
+        <p class="text-sm text-gray-500">
+            Menampilkan <span class="font-semibold text-gray-700">{{ $categories->firstItem() }}</span>
+            - <span class="font-semibold text-gray-700">{{ $categories->lastItem() }}</span>
+            dari <span class="font-semibold text-gray-700">{{ $categories->total() }}</span> data
+        </p>
+        <div class="flex items-center gap-1">
+            {{-- Previous --}}
+            @if($categories->onFirstPage())
+                <span class="px-3 py-2 text-sm text-gray-300 bg-gray-50 border border-gray-200 rounded cursor-not-allowed">&laquo; Prev</span>
+            @else
+                <a href="{{ $categories->appends(['search' => $search, 'filter' => $filter])->previousPageUrl() }}"
+                   class="px-3 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition">&laquo; Prev</a>
+            @endif
+
+            {{-- Page Numbers --}}
+            @foreach($categories->getUrlRange(1, $categories->lastPage()) as $page => $url)
+                @if($page == $categories->currentPage())
+                    <span class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 border border-indigo-600 rounded">{{ $page }}</span>
+                @else
+                    <a href="{{ $categories->appends(['search' => $search, 'filter' => $filter])->url($page) }}"
+                       class="px-3 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition">{{ $page }}</a>
+                @endif
+            @endforeach
+
+            {{-- Next --}}
+            @if($categories->hasMorePages())
+                <a href="{{ $categories->appends(['search' => $search, 'filter' => $filter])->nextPageUrl() }}"
+                   class="px-3 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition">Next &raquo;</a>
+            @else
+                <span class="px-3 py-2 text-sm text-gray-300 bg-gray-50 border border-gray-200 rounded cursor-not-allowed">Next &raquo;</span>
+            @endif
         </div>
     </div>
+    @endif
+</div>
 @endsection
