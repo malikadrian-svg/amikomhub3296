@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Event;
+use App\Models\Partner;
 
 class DatabaseSeeder extends Seeder
 {
@@ -121,9 +122,21 @@ class DatabaseSeeder extends Seeder
             ]
         ];
 
-        // Eksekusi Insert
+        // Eksekusi Insert Events
         foreach ($events as $event) {
             Event::firstOrCreate(['title' => $event['title']], $event);
+        }
+
+        // 4. Partners
+        $partners = [
+            ['name' => 'PD Oktaviani Farida (Persero) Tbk', 'logo_url' => 'https://via.placeholder.com/100'],
+            ['name' => 'Yayasan Pratiwi Tbk', 'logo_url' => 'https://via.placeholder.com/100'],
+            ['name' => 'PT Prasasta Prakasa (Persero) Tbk', 'logo_url' => 'https://via.placeholder.com/100'],
+            ['name' => 'PD Tampubolon Rahmawati', 'logo_url' => 'https://via.placeholder.com/100'],
+        ];
+
+        foreach ($partners as $partner) {
+            Partner::firstOrCreate(['name' => $partner['name']], $partner);
         }
     }
 }
