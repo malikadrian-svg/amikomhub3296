@@ -4,7 +4,7 @@
 <div class="p-6 max-w-4xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Menyunting Pengaturan Event</h2>
     
-    <form action="{{ route('admin.events.update', $event->id) }}" method="POST" class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+    <form action="{{ route('admin.events.update', $event->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         @csrf
         @method('PUT')
 
@@ -49,7 +49,12 @@
             <label class="block mb-2 font-medium text-gray-700">Lokasi / Gedung</label>
             <input type="text" name="location" value="{{ $event->location }}" class="w-full border border-gray-300 p-2.5 rounded" required>
         </div>
-        
+
+        <div class="mb-6">
+            <label class="block mb-2 font-medium text-gray-700">Poster Event (Opsional)</label>
+            <input type="file" name="poster" accept="image/*" class="w-full border border-gray-300 p-2.5 rounded">
+        </div>
+
         <div class="flex justify-end border-t pt-4">
             <button type="submit" class="bg-blue-600 text-white px-8 py-2.5 rounded font-semibold hover:bg-blue-700 shadow-md">Simpan Perubahan</button>
         </div>
