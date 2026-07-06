@@ -20,6 +20,9 @@ Route::get('/payment/{order_id}', [CheckoutController::class, 'payment'])->name(
 Route::get('/success/{order_id}', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
 
+// Rute Webhook Midtrans
+Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);
+
 // Grouping untuk URL berawalan /admin
 Route::prefix('admin')->name('admin.')->group(function () {
     // Rute Login bebas akses

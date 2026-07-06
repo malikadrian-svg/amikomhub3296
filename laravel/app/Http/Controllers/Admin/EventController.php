@@ -7,12 +7,38 @@ use App\Models\Event;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        // Memakai relasi dan pengaturan limit paginasi (10 entri per halaman)
-        $events = \App\Models\Event::with('category')->latest()
-            ->paginate(10);
-        return view('admin.events.index', compact('events'));
+        $search = $request->input('search');
+        $filter = $request->input('filter');
+
+        $query = \App\Models\Event::with('category');
+
+        if ($search) {
+            $query->where('title', 'LIKE', '%' . $search . '%');
+        }
+
+        switch ($filter) {
+            case 'title_asc':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'title_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        $events = $query->paginate(4);
+
+        return view('admin.events.index', compact('events', 'search', 'filter'));
     }
 
     public function create()
