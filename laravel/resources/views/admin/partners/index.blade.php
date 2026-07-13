@@ -1,27 +1,28 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Event')
+@section('title', 'Manajemen Partner')
 
 @section('content')
 <div>
     <!-- Page Header -->
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;">
         <div>
-            <h1 style="font-size:24px;font-weight:700;color:#0f172a;letter-spacing:-0.02em;margin-bottom:4px;">Manajemen Event</h1>
-            <p style="font-size:14px;color:#475569;">Kelola seluruh data acara dan kegiatan yang tersedia.</p>
+            <h1 style="font-size:24px;font-weight:700;color:#0f172a;letter-spacing:-0.02em;margin-bottom:4px;">Manajemen Partner</h1>
+            <p style="font-size:14px;color:#475569;">Kelola data mitra dan sponsor platform.</p>
         </div>
-        <a href="{{ route('admin.events.create') }}"
+        <a href="{{ route('admin.partners.create') }}"
            style="display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 20px;
                   background:#491e85;color:#fff;border-radius:8px;font-size:14px;font-weight:600;
-                  text-decoration:none;white-space:nowrap;transition:background 150ms;flex-shrink:0;"
+                  text-decoration:none;white-space:nowrap;transition:background 150ms ease-out;flex-shrink:0;"
            onmouseover="this.style.background='#5e26ac'" onmouseout="this.style.background='#491e85'">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
             </svg>
-            Tambah Event
+            Tambah Partner
         </a>
     </div>
 
+    {{-- Success Alert --}}
     @if(session('success'))
     <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
         <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
@@ -41,77 +42,75 @@
     @endif
 
     {{-- Search & Filter --}}
-    <form action="{{ route('admin.events.index') }}" method="GET"
+    <form action="{{ route('admin.partners.index') }}" method="GET"
           style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">
-        <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari judul event..."
+        <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama partner..."
                style="flex:1;min-width:200px;height:44px;padding:0 16px;border:1px solid #e2e8f0;border-radius:12px;
-                      font-size:14px;color:#1e293b;background:#fff;outline:none;font-family:'Manrope',sans-serif;"
+                      font-size:14px;color:#1e293b;background:#fff;outline:none;font-family:'Manrope',sans-serif;
+                      transition:border-color 150ms,box-shadow 150ms;"
                onfocus="this.style.borderColor='#9d5ef5';this.style.boxShadow='0 0 0 4px #f3ebfe';"
                onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none';">
         <select name="filter"
                 style="height:44px;padding:0 12px;border:1px solid #e2e8f0;border-radius:12px;
                        font-size:14px;color:#1e293b;background:#fff;outline:none;font-family:'Manrope',sans-serif;">
             <option value="">— Urutkan —</option>
-            <option value="title_asc"  {{ ($filter??'')=='title_asc'  ?'selected':'' }}>Judul (A → Z)</option>
-            <option value="title_desc" {{ ($filter??'')=='title_desc' ?'selected':'' }}>Judul (Z → A)</option>
-            <option value="oldest"     {{ ($filter??'')=='oldest'     ?'selected':'' }}>Terlama</option>
-            <option value="newest"     {{ ($filter??'')=='newest'     ?'selected':'' }}>Terbaru</option>
+            <option value="name_asc"  {{ ($filter??'')=='name_asc'  ? 'selected':'' }}>Nama (A → Z)</option>
+            <option value="name_desc" {{ ($filter??'')=='name_desc' ? 'selected':'' }}>Nama (Z → A)</option>
+            <option value="oldest"    {{ ($filter??'')=='oldest'    ? 'selected':'' }}>Terlama</option>
+            <option value="newest"    {{ ($filter??'')=='newest'    ? 'selected':'' }}>Terbaru</option>
         </select>
         <button type="submit"
                 style="height:44px;padding:0 20px;background:#7831dc;color:#fff;border:none;border-radius:12px;
                        font-size:14px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 150ms;"
-                onmouseover="this.style.background='#5e26ac'" onmouseout="this.style.background='#7831dc'">Cari</button>
+                onmouseover="this.style.background='#5e26ac'" onmouseout="this.style.background='#7831dc'">
+            Cari
+        </button>
         @if(($search??'')||($filter??''))
-        <a href="{{ route('admin.events.index') }}"
+        <a href="{{ route('admin.partners.index') }}"
            style="height:44px;padding:0 20px;display:inline-flex;align-items:center;background:#fff;color:#475569;
-                  border:1px solid #e2e8f0;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;"
-           onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">Reset</a>
+                  border:1px solid #e2e8f0;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:background 150ms;"
+           onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+            Reset
+        </a>
         @endif
     </form>
 
     {{-- Table --}}
-    <div style="background:#fff;border:1px solid #f1f5f9;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px 0 rgba(15,23,42,.03);">
+    <div style="background:#fff;border:1px solid #f1f5f9;border-radius:16px;overflow:hidden;
+                box-shadow:0 1px 3px 0 rgba(15,23,42,.03);">
         <div class="overflow-x-auto">
             <table style="width:100%;border-collapse:collapse;">
                 <thead>
                     <tr style="background:#f8fafc;border-bottom:1px solid #f1f5f9;">
-                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;width:50px;">No</th>
-                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Poster</th>
-                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Judul Event</th>
-                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Kategori</th>
-                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Sisa Stok</th>
-                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Tanggal</th>
+                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;width:56px;">No</th>
+                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Logo</th>
+                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Nama Partner</th>
+                        <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Dibuat</th>
                         <th style="padding:12px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;text-align:left;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($events as $index => $event)
+                    @forelse($partners as $index => $partner)
                     <tr style="border-bottom:1px solid #f1f5f9;transition:background 150ms;"
                         onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                        <td style="padding:14px 20px;font-size:14px;color:#94a3b8;">{{ $events->firstItem() + $index }}</td>
+                        <td style="padding:14px 20px;font-size:14px;color:#94a3b8;">{{ $partners->firstItem() + $index }}</td>
                         <td style="padding:14px 20px;">
-                            <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
-                                ? asset('storage/' . $event->poster_path)
-                                : 'https://placehold.co/64x80/f1f5f9/94a3b8?text=No+Img' }}"
-                                 style="width:48px;height:60px;border-radius:10px;object-fit:cover;border:1px solid #f1f5f9;">
+                            @php
+                                $logoUrl = $partner->logo_url;
+                                if (empty($logoUrl) || str_contains($logoUrl, 'via.placeholder.com')) {
+                                    $logoUrl = 'https://placehold.co/44x44/f1f5f9/94a3b8?text=No+Img';
+                                }
+                            @endphp
+                            <img src="{{ $logoUrl }}" alt="{{ $partner->name }}"
+                                 style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid #f1f5f9;">
                         </td>
-                        <td style="padding:14px 20px;font-size:14px;font-weight:600;color:#1e293b;max-width:200px;">
-                            <span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $event->title }}</span>
-                        </td>
-                        <td style="padding:14px 20px;">
-                            <span style="display:inline-flex;padding:3px 10px;background:#f3ebfe;color:#7831dc;border:1px solid #d9c1fb;border-radius:6px;font-size:12px;font-weight:600;">
-                                {{ $event->category->name ?? '-' }}
-                            </span>
-                        </td>
-                        <td style="padding:14px 20px;font-size:14px;color:#475569;">
-                            {{ $event->stock }}
-                        </td>
-                        <td style="padding:14px 20px;font-size:13px;color:#94a3b8;white-space:nowrap;">
-                            {{ \Carbon\Carbon::parse($event->date)->format('d M Y, H:i') }}
+                        <td style="padding:14px 20px;font-size:14px;font-weight:600;color:#1e293b;">{{ $partner->name }}</td>
+                        <td style="padding:14px 20px;font-size:13px;color:#94a3b8;">
+                            {{ \Carbon\Carbon::parse($partner->created_at)->format('d M Y') }}
                         </td>
                         <td style="padding:14px 20px;">
                             <div style="display:flex;gap:6px;align-items:center;">
-                                <a href="{{ route('admin.events.edit', $event->id) }}"
+                                <a href="{{ route('admin.partners.edit', $partner->id) }}"
                                    title="Edit"
                                    style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
                                           background:#f1f5f9;border-radius:8px;text-decoration:none;transition:background 150ms;"
@@ -120,9 +119,10 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
                                 </a>
-                                <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST"
-                                      onsubmit="return confirm('Hapus event ini secara permanen?');" style="margin:0;">
-                                    @csrf @method('DELETE')
+                                <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST"
+                                      onsubmit="return confirm('Hapus partner ini secara permanen?');" style="margin:0;">
+                                    @csrf
+                                    @method('DELETE')
                                     <button type="submit" title="Hapus"
                                             style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
                                                    background:#fff1f2;border-radius:8px;border:none;cursor:pointer;transition:background 150ms;"
@@ -137,8 +137,8 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" style="padding:56px 24px;text-align:center;color:#94a3b8;font-size:14px;">
-                            Belum ada event. Klik "Tambah Event" untuk menambahkan.
+                        <td colspan="5" style="padding:56px 24px;text-align:center;color:#94a3b8;font-size:14px;">
+                            Belum ada partner. Klik "Tambah Partner" untuk menambahkan.
                         </td>
                     </tr>
                     @endforelse
@@ -146,37 +146,40 @@
             </table>
         </div>
 
-        @if($events->hasPages())
-        <div style="padding:16px 20px;border-top:1px solid #f1f5f9;display:flex;align-items:center;flex-wrap:wrap;gap:12px;">
+        {{-- Pagination --}}
+        @if($partners->hasPages())
+        <div style="padding:16px 20px;border-top:1px solid #f1f5f9;display:flex;align-items:center;justify-content:between;flex-wrap:wrap;gap:12px;">
             <p style="font-size:13px;color:#94a3b8;flex:1;">
-                Menampilkan <span style="color:#1e293b;font-weight:600;">{{ $events->firstItem() }}</span>
-                – <span style="color:#1e293b;font-weight:600;">{{ $events->lastItem() }}</span>
-                dari <span style="color:#1e293b;font-weight:600;">{{ $events->total() }}</span> data
+                Menampilkan <span style="color:#1e293b;font-weight:600;">{{ $partners->firstItem() }}</span>
+                – <span style="color:#1e293b;font-weight:600;">{{ $partners->lastItem() }}</span>
+                dari <span style="color:#1e293b;font-weight:600;">{{ $partners->total() }}</span> data
             </p>
             <div style="display:flex;gap:4px;align-items:center;">
-                @if($events->onFirstPage())
+                @if($partners->onFirstPage())
                     <span style="padding:6px 12px;font-size:13px;color:#cbd5e1;background:#f8fafc;border:1px solid #f1f5f9;border-radius:8px;cursor:not-allowed;">‹ Prev</span>
                 @else
-                    <a href="{{ $events->appends(['search'=>$search,'filter'=>$filter])->previousPageUrl() }}"
+                    <a href="{{ $partners->appends(['search'=>$search,'filter'=>$filter])->previousPageUrl() }}"
                        style="padding:6px 12px;font-size:13px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;transition:all 150ms;"
-                       onmouseover="this.style.background='#f3ebfe';this.style.color='#8436f2';"
-                       onmouseout="this.style.background='#fff';this.style.color='#475569';">‹ Prev</a>
+                       onmouseover="this.style.background='#f3ebfe';this.style.color='#8436f2';this.style.borderColor='#c6a3f9';"
+                       onmouseout="this.style.background='#fff';this.style.color='#475569';this.style.borderColor='#e2e8f0';">‹ Prev</a>
                 @endif
-                @foreach($events->getUrlRange(1, $events->lastPage()) as $page => $url)
-                    @if($page == $events->currentPage())
+
+                @foreach($partners->getUrlRange(1, $partners->lastPage()) as $page => $url)
+                    @if($page == $partners->currentPage())
                         <span style="padding:6px 12px;font-size:13px;font-weight:700;color:#fff;background:#ad78f6;border:1px solid #ad78f6;border-radius:8px;">{{ $page }}</span>
                     @else
-                        <a href="{{ $events->appends(['search'=>$search,'filter'=>$filter])->url($page) }}"
-                           style="padding:6px 12px;font-size:13px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;"
-                           onmouseover="this.style.background='#f3ebfe';this.style.color='#8436f2';"
-                           onmouseout="this.style.background='#fff';this.style.color='#475569';">{{ $page }}</a>
+                        <a href="{{ $partners->appends(['search'=>$search,'filter'=>$filter])->url($page) }}"
+                           style="padding:6px 12px;font-size:13px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;transition:all 150ms;"
+                           onmouseover="this.style.background='#f3ebfe';this.style.color='#8436f2';this.style.borderColor='#c6a3f9';"
+                           onmouseout="this.style.background='#fff';this.style.color='#475569';this.style.borderColor='#e2e8f0';">{{ $page }}</a>
                     @endif
                 @endforeach
-                @if($events->hasMorePages())
-                    <a href="{{ $events->appends(['search'=>$search,'filter'=>$filter])->nextPageUrl() }}"
-                       style="padding:6px 12px;font-size:13px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;"
-                       onmouseover="this.style.background='#f3ebfe';this.style.color='#8436f2';"
-                       onmouseout="this.style.background='#fff';this.style.color='#475569';">Next ›</a>
+
+                @if($partners->hasMorePages())
+                    <a href="{{ $partners->appends(['search'=>$search,'filter'=>$filter])->nextPageUrl() }}"
+                       style="padding:6px 12px;font-size:13px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;transition:all 150ms;"
+                       onmouseover="this.style.background='#f3ebfe';this.style.color='#8436f2';this.style.borderColor='#c6a3f9';"
+                       onmouseout="this.style.background='#fff';this.style.color='#475569';this.style.borderColor='#e2e8f0';">Next ›</a>
                 @else
                     <span style="padding:6px 12px;font-size:13px;color:#cbd5e1;background:#f8fafc;border:1px solid #f1f5f9;border-radius:8px;cursor:not-allowed;">Next ›</span>
                 @endif

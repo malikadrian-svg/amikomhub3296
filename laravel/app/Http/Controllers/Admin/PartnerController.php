@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\Partner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
-class CategoryController extends Controller
+class PartnerController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->input('search');
         $filter = $request->input('filter');
 
-        $query = Category::withCount('events');
+        $query = Partner::query();
 
         if ($search) {
             $query->where('name', 'LIKE', '%' . $search . '%');
@@ -38,51 +37,49 @@ class CategoryController extends Controller
                 break;
         }
 
-        $categories = $query->paginate(4);
+        $partners = $query->paginate(4);
 
-        return view('admin.categories.index', compact('categories', 'search', 'filter'));
+        return view('admin.partners.index', compact('partners', 'search', 'filter'));
     }
 
     public function create()
     {
-        return view('admin.categories.create');
+        return view('admin.partners.create');
     }
 
-    public function store(Request $request)
+    public function store(\Illuminate\Http\Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'logo_url' => 'required|url|max:255',
         ]);
 
-        $data['slug'] = Str::slug($data['name']);
+        Partner::create($data);
 
-        Category::create($data);
-
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan.');
+        return redirect()->route('admin.partners.index')->with('success', 'Data Partner berhasil ditambahkan.');
     }
 
-    public function edit(Category $category)
+    public function edit(Partner $partner)
     {
-        return view('admin.categories.edit', compact('category'));
+        return view('admin.partners.edit', compact('partner'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(\Illuminate\Http\Request $request, Partner $partner)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'logo_url' => 'required|url|max:255',
         ]);
 
-        $data['slug'] = Str::slug($data['name']);
+        $partner->update($data);
 
-        $category->update($data);
-
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil diperbarui.');
+        return redirect()->route('admin.partners.index')->with('success', 'Data Partner berhasil diperbarui.');
     }
 
-    public function destroy(Category $category)
+    public function destroy(Partner $partner)
     {
-        $category->delete();
+        $partner->delete();
 
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus.');
+        return redirect()->route('admin.partners.index')->with('success', 'Data Partner berhasil dihapus.');
     }
 }

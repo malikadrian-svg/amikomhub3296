@@ -7,12 +7,38 @@ use App\Models\Event;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        // Memakai relasi dan pengaturan limit paginasi (10 entri per halaman)
-        $events = \App\Models\Event::with('category')->latest()
-            ->paginate(10);
-        return view('admin.events.index', compact('events'));
+        $search = $request->input('search');
+        $filter = $request->input('filter');
+
+        $query = \App\Models\Event::with('category');
+
+        if ($search) {
+            $query->where('title', 'LIKE', '%' . $search . '%');
+        }
+
+        switch ($filter) {
+            case 'title_asc':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'title_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        $events = $query->paginate(4);
+
+        return view('admin.events.index', compact('events', 'search', 'filter'));
     }
 
     public function create()
@@ -25,22 +51,25 @@ class EventController extends Controller
     {
         // Menerapkan validasi data request dari pengguna
         $data = $request->validate([
-            'category_id' => 'required',
+            'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'stock' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_active' => 'boolean',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|numeric|min:1',
+            'poster' => 'nullable|image|max:2048' // Maksimal 2MB
         ]);
+
+        if ($request->hasFile('poster')) {
+            // Simpan ke direktori storage/app/public/posters
+            $data['poster_path'] = $request->file('poster')->store('posters', 'public');
+        }
 
         // Menyimpan data yang telah divalidasi ke dalam tabel menggunakan Model
         \App\Models\Event::create($data);
 
         return redirect()->route('admin.events.index')->with('success', 'Data Event berhasil ditambahkan.');
-
     }
 
     public function destroy(Event $event)
@@ -58,17 +87,27 @@ class EventController extends Controller
     public function update(\Illuminate\Http\Request $request, Event $event)
     {
         $data = $request->validate([
-            'category_id' => 'required',
+            'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'stock' => 'required|numeric'
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|numeric|min:1',
+            'poster' => 'nullable|image|max:2048'
         ]);
+
+        if ($request->hasFile('poster')) {
+            // Hapus gambar lama jika sebelumnya sudah memiliki poster
+            if ($event->poster_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($event->poster_path);
+            }
+            // Upload gambar baru
+            $data['poster_path'] = $request->file('poster')->store('posters', 'public');
+        }
 
         $event->update($data);
 
-        return redirect()->route('admin.events.index')->with('success', 'Data event berhasil diperbarui.');
+        return redirect()->route('admin.events.index')->with('success', 'Event berhasil diperbarui.');
     }
 }
